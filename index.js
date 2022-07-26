@@ -1,37 +1,51 @@
-// const Info = require('./info');
-// const info1 = new Info("Seoyoung",45);
-// info1.greeting();
+
+ const express = require('express');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
+const app = express();
+
 const server = http.createServer((req,res)=> {
-    // console.log(req.url);//'/' 
-    // if(req.url==='/') {
-    //     fs.readFile(path.join(__dirname,'public','index.html'),
-    //     (err,content) => {
-    //         if(err) throw err;
-    //         res.writeHead(200,{'Content-type':'text/html'});//means everything is okay
-    //         res.end(content);
-    //     });
 
-    // }
 
-    // if(req.url==='/api/users') {
-    //     //rest api
-    //     const users = [
-    //         {name:'yugy',age:22},
-    //         {name:'seoyoung',age:25}
-    //     ];
-    //     res.writeHead(200,{'Content-type':'application/json'});
-    //     res.end(JSON.stringify(users));
+    app.post('/sendEmail',(req,res)=> {
+        
+        console.log('in post method');
 
-    // }
+        const transporter = nodemailer.createTransport({
+            service: 'gmail.com',
+            auth: {
+                user: 'seoyoung.hwng@gmail.com',
+                pass: 'hhahsyppsskk'
+            }
+        
+        });
+        
+        const mailOptions = {
+            from: req.body.email,
+            to: 'suhyoung1030@gmail.com',
+            subject: req.body.subject,
+            text: req.body.content,
+        }
+        
+        transporter.sendMail(mailOptions, (err, info) => {
+            if(err) {
+                console.log(err);
+            }
+            alert('email success!');
+        })
     
-    /********************make file path DYNAMIC */
-    //build file path
-    //set this to request url.. root is kinda different 3항 연산자 이용
-        //     fs.readFile(path.join(__dirname,'public','index.html'),
+        response = {
+            name: req.body.name,
+            email: req.body.email,
+            content: req.body.email,
+        }
+    
+        console.log(response);
+    
+        res.end(JSON.stringify(response));
+    })
     let filePath = path.join(__dirname,'public',req.url ==='/' ? 'index.html': req.url);
 
     //console.log(filePath);
@@ -92,4 +106,6 @@ const server = http.createServer((req,res)=> {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT,()=>console.log(`Server running on port ${PORT}`));//callback
+
+
 
